@@ -1,24 +1,23 @@
-import { getShopsData } from '@/services/getShopsData'
-import { json } from 'stream/consumers'
+import ShopCard from "@/components/card/ShopCard";
+import Carrusel from "@/components/carrusel/Carrusel";
+import FilterModal from "@/components/modal/FilterModal";
+import { Shop} from "@/interfaces/shops/shops";
+import { getShopsData } from "@/services/getShopsData";
 
 
 
-
-export default async function Home() {
-
-  const data = await getShopsData()
-  
+export default async function Page() {
+  const { data }:{data:Shop[]} = await getShopsData();
 
   return (
     <>
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-      {data.map(el=>{
-        return <div key={el.id_shop} className='text-yellow-400 bg-slate-600 w-96 h-20 m-2 border-4 border-orange-600 '>
-          <h1>{el.nombre}</h1>
-          <h2>{el.provincia}</h2>
-        </div>
-      })}
+    <Carrusel />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4">
+        {data.map(el=>{
+          return  <ShopCard key={el.merchant_UUID} shop={el}/>
+        })}
       </div>
+      <FilterModal/>
     </>
-  )
+  );
 }

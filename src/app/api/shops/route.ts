@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { Agent } from "https";
 import { getAccesToken } from "../services/getAccesToken";
 import { ultimaPalabra } from "../utilities/ultimaPalabra";
+import { Shop } from "@/interfaces/shops/shops";
+
+
 
 const instanciaAxios = axios.create({
   httpsAgent: new Agent({
@@ -19,12 +22,16 @@ export async function GET(request: NextRequest) {
   const moneda = searchParams.get("moneda");
   const provincia = searchParams.get("provincia");
   const municipio = searchParams.get("municipio");
+  const name = searchParams.get("name");
 
   try {
     const params = new URLSearchParams();
 
-    if (moneda) {
+    if (moneda && moneda !== "USDCUP" ) {
       params.set("moneda", moneda);
+   }
+    if (name) {
+      params.set("name", name);
     }
 
     if (provincia) {
@@ -46,8 +53,9 @@ export async function GET(request: NextRequest) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    const { data } = response;
-    return NextResponse.json({ data }, { status: 200 });
+    const { data }:{data:Shop[]} = response;
+    
+    return NextResponse.json({ data }, { status: 200 }, );
   } catch (error) {
     return NextResponse.json(
       { error: "Ocurrió un error en el servidor" },

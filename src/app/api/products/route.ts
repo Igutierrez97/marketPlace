@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
   const accessToken = await getAccesToken();
 
   const searchParams = request.nextUrl.searchParams;
+  const nombre_producto = searchParams.get("nombre_producto");
   const moneda = searchParams.get("moneda");
   const provincia = searchParams.get("provincia");
   const municipio = searchParams.get("municipio");
@@ -27,8 +28,15 @@ export async function GET(request: NextRequest) {
     const params = new URLSearchParams();
     params.set("count", "48");
 
-    if (moneda) {
-      params.set("moneda", moneda);
+    if (page) {
+      params.set("page", page);
+    }
+
+    if (moneda && moneda !== "USDCUP" ) {
+       params.set("moneda", moneda);
+    }
+    if (nombre_producto) {
+      params.set("nombre_producto", nombre_producto);
     }
 
     if (provincia) {
@@ -50,13 +58,7 @@ export async function GET(request: NextRequest) {
       params.set("min_price", min_price);
     }
 
-    if (page !== null) {
-      params.set("page", page);
-    }
-
     const urlQuery = `${url}?${params.toString()}`;
-
-    console.log(urlQuery);
 
     const response = await instanciaAxios.get(urlQuery, {
       headers: {
