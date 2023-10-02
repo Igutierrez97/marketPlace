@@ -6,7 +6,7 @@ export async function getShopsData(nombre?:string) {
     url+=`?name=${nombre}`
   }
 
-  const response = await fetch(url, {next:{revalidate:360}});
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("Failed to fetch data");
